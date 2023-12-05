@@ -9,7 +9,6 @@ use actix_web::{
     web::{self, BufMut, Redirect},
     App, Error, HttpRequest, HttpResponse, HttpServer, Responder,
 };
-use env_logger::Env;
 
 const BITMAP_WIDTH: usize = 256;
 const BITMAP_HEIGTH: usize = 256;
@@ -99,8 +98,7 @@ async fn redirect_to_index() -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
-    let port_str = std::env::var("PORT").expect("PORT must be set.");
-    let port = u16::from_str_radix(&port_str, 10).expect("PORT must be a 16bits unsing integer");
+    let address = std::env::var("ADDRESS").expect("ADDRESS.");
 
     HttpServer::new(|| {
         App::new()
@@ -110,7 +108,7 @@ async fn main() -> std::io::Result<()> {
             .service(actix_files::Files::new("/", "./public").index_file("index.html"))
             .default_service(web::to(redirect_to_index))
     })
-    .bind(("127.0.0.1", port))?
+    .bind(address)?
     .run()
     .await
 }
