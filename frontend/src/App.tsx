@@ -43,9 +43,7 @@ function App() {
       } catch (e: any) {
         setErrMsg("Sucesio un error inesperado")
       }
-      if (progress < 100) {
-        setProgress(100)
-      }
+      setProgress(100)
     }
     setDisable(false)
   }
