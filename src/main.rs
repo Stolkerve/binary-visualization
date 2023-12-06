@@ -99,6 +99,7 @@ async fn redirect_to_index() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     let address = std::env::var("ADDRESS").expect("ADDRESS.");
+    println!("{}", address);
 
     HttpServer::new(|| {
         App::new()

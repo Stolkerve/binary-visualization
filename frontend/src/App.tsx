@@ -1,13 +1,14 @@
 import { Progress } from "flowbite-react";
 import axios from "./axios";
 import DragAndDrop from "./components/DragAndDrop"
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function App() {
   const [progress, setProgress] = useState(0)
   const [disable, setDisable] = useState(false)
   const [result, setResult] = useState<string | undefined>(undefined)
   const [errMsg, setErrMsg] = useState("")
+  let resultRef = useRef<HTMLDivElement>(null)
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -35,9 +36,6 @@ function App() {
           onUploadProgress: (event) => {
             setProgress((event.loaded / file.size) * 80)
           },
-          onDownloadProgress: (event) => {
-            setProgress(progress + event.progress! * 20)
-          }
         })
         setResult(res.data)
       } catch (e: any) {
@@ -47,6 +45,17 @@ function App() {
     }
     setDisable(false)
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+
+      resultRef?.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "end"
+      })
+    }, 100)
+  }, [result])
 
   return (
     <>
@@ -60,9 +69,9 @@ function App() {
         {
           result
           &&
-          <div className="py-12">
+          <div className="py-12" ref={resultRef}>
             <p className="text-lg text-center font-medium">Resultado</p>
-            <img alt="resultado" src={result} />
+            <img alt="resultado" src={result} width={256} height={256} />
           </div>
         }
       </div>
