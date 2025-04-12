@@ -97,10 +97,6 @@ async fn redirect_to_index() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenv::dotenv().ok();
-    let address = std::env::var("ADDRESS").expect("ADDRESS.");
-    println!("{}", address);
-
     HttpServer::new(|| {
         App::new()
             .wrap(Logger::default())
@@ -109,7 +105,7 @@ async fn main() -> std::io::Result<()> {
             .service(actix_files::Files::new("/", "./public").index_file("index.html"))
             .default_service(web::to(redirect_to_index))
     })
-    .bind(address)?
+    .bind(("0.0.0.0", 8080))?
     .run()
     .await
 }
